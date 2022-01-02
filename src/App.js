@@ -7,18 +7,24 @@ function App() {
 
   const handleOnDrop = (data) => {
     data.splice(0, 4);
+    data.forEach(function(arr) {
+      arr["Attendance"] = arr["errors"];
+      delete arr["errors"];
+      delete arr["meta"];
+    });
     const teacherTime = 0.6 * moment.duration(data[1].data[2]).asSeconds();
-
+    for (let j = 0; j < 2; j++) {
+      data[j].data.splice(1, 1);
+    }
     for (let i = 2; i < data.length - 1; i++) {
       const studentTime = moment.duration(data[i].data[2]).asSeconds();
-      delete data[i].data[1];
+      data[i].data.splice(1, 1);
       if (studentTime >= teacherTime) {
-        data[i].data.push("Present");
+        data[i].Attendance.push("Present");
       } else {
-        data[i].data.push("Absent");
+        data[i].Attendance.push("Absent");
       }
     }
-    console.log(data);
     setFile(jsonToCSV(data));
     console.log(jsonToCSV(data));
   };
